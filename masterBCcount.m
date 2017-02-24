@@ -65,9 +65,8 @@ for(p = 1:length(fpr1subFolders))% don't need to skip the first one
        text(d(:,1)+10,d(:,2), text_str(:,2) ,'Color','red','FontSize',6)
         
     end
-    savename=sprintf('D:\\exp5\\data\\%s\\%s_xfp',prefix,prefix);
-    save(savename,'xfpdata');
-   end
+    
+end
 end
 
     
