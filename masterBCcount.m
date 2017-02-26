@@ -1,5 +1,6 @@
 %%Run after h5tobinmaskdriveSHORT
-
+%yfp=850 cfp=700
+%561=730 640=810
 function drive
 fpr1dir = 'D:\exp5\bwmask';
 ildir = 'D:\exp5\Ilastik';
@@ -12,6 +13,10 @@ for(bo = 1:length(fpr1subFolders))
     nameofFolder = fliplr(strtok(wholefile, '\'));
     fpr1subFolders{bo} = nameofFolder;
 end
+ythresh=850;
+cthresh=700;
+rthresh=730;
+frthresh=810;
 fpr1subFolders = fpr1subFolders(2:end);
 %]
 [procsubFolders] = getSubFolders(processedir);%gets the file path of the sub folders and the folder being search
@@ -49,21 +54,8 @@ for(p = 1:length(fpr1subFolders))% don't need to skip the first one
         xfpdata(pos+1).r2= regionprops(cc3, imageStack(:,:,7), 'MeanIntensity');
         xfpdata(pos+1).fr1= regionprops(cc3, imageStack(:,:,4), 'MeanIntensity');
         xfpdata(pos+1).fr2= regionprops(cc3, imageStack(:,:,8), 'MeanIntensity');
-        l=struct2cell(xfpdata(pos+1).centroid);
-        l=l';
-        d=cell2mat(l);
-        text_str = cell(size(xfpdata(pos+1).r1,1),1);
-        for ii=1:size(xfpdata(pos+1).r1,1)
-                 text_str{ii,1} = [struct2cell(xfpdata(pos+1).cfp(ii)) ...
-                struct2cell(xfpdata(pos+1).yfp(ii)) struct2cell( xfpdata(pos+1).r1(ii))];
-            text_str{ii,2} =  [struct2cell(xfpdata(pos+1).fr1(ii)),...
-                struct2cell(xfpdata(pos+1).r2(ii)) struct2cell(xfpdata(pos+1).fr2(ii))];
-           
-        end
-       imshow(new_mask, [])
-       text(d(:,1)-20,d(:,2), text_str(:,1) ,'Color','red','FontSize',6)
-       text(d(:,1)+10,d(:,2), text_str(:,2) ,'Color','red','FontSize',6)
-        
+        getrawimg(pos,xfpdata, new_mask);
+               
     end
     
 end
@@ -86,4 +78,20 @@ end
         end
         listOfFolderNames = [listOfFolderNames singleSubFolder];
     end
+ end
+ function rawvalpic = getrawimg(pos, xfpdata,new_mask)
+ l=struct2cell(xfpdata(pos+1).centroid);
+        l=l';
+        d=cell2mat(l);
+        text_str = cell(size(xfpdata(pos+1).r1,1),1);
+        for ii=1:size(xfpdata(pos+1).r1,1)
+                 text_str{ii,1} = [struct2cell(xfpdata(pos+1).cfp(ii)) ...
+                struct2cell(xfpdata(pos+1).yfp(ii)) struct2cell( xfpdata(pos+1).r1(ii))];
+            text_str{ii,2} =  [struct2cell(xfpdata(pos+1).fr1(ii)),...
+                struct2cell(xfpdata(pos+1).r2(ii)) struct2cell(xfpdata(pos+1).fr2(ii))];
+           
+        end
+       imshow(new_mask, [])
+       text(d(:,1)-20,d(:,2), text_str(:,1) ,'Color','red','FontSize',6)
+       text(d(:,1)+10,d(:,2), text_str(:,2) ,'Color','red','FontSize',6)
  end
